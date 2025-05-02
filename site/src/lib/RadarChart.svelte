@@ -51,7 +51,7 @@
     update_models_cps()
   })
 
-  function update_point_from_weights(current_weights: CpsConfig[`parts`]) {
+  function update_point_from_weights(current_weights: CpsConfig) {
     if (!current_weights || Object.values(current_weights).length < 3) return
 
     // For 3 axes, we can use barycentric coordinates
@@ -253,7 +253,7 @@
 
 <div class="radar-chart">
   <span class="metric-name">
-    {ALL_METRICS.CPS.label}
+    {ALL_METRICS.CPS.short}
     <Tooltip tip_style="z-index: 20; font-size: 0.8em;">
       <svg style="opacity: 0.7; cursor: help;"><use href="#icon-info" /></svg>
       {#snippet tip()}
@@ -305,18 +305,7 @@
         font-size="14"
         fill={colors[idx]}
       >
-        <!-- Handle subscripts and superscripts manually since <sub> and <sup> are not supported in SVG -->
-        {#if weight.label.includes(`<sub>`)}
-          {@const parts = weight.label.split(/<sub>|<\/sub>/)}
-          {parts[0]}
-          <tspan baseline-shift="sub" font-size="10">{parts[1]}</tspan>
-        {:else if weight.label.includes(`<sup>`)}
-          {@const parts = weight.label.split(/<sup>|<\/sup>/)}
-          {parts[0]}
-          <tspan baseline-shift="super" font-size="10">{parts[1]}</tspan>
-        {:else}
-          {@html weight.label}
-        {/if}
+        {@html weight.svg_label ?? weight.short}
         <tspan dy={spacing} x={label_x} font-size="12" font-weight="bold"
           >{((weight.weight as number) * 100).toFixed(0)}%</tspan
         >
